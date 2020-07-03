@@ -19,11 +19,11 @@ class Client implements Model
         return $result;
     }
 
-    public function create()
+    public function create($data)
     {
     }
 
-    public function update()
+    public function update($data)
     {
     }
 }

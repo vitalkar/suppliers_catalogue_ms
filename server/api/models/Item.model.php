@@ -20,12 +20,17 @@ class Item implements Model
         return $result;
     }   
 
-    public function create()
+    public function create($data)
     {
-        
+        $stmt = $this->conn->prepare("INSERT INTO $this->table (name, price, has_vat) VALUES (?, ?, ?)");
+        $stmt->bind_param("sis", $data['name'], $data['price'], $data['has_vat']);
+        $result = $stmt->execute();
+        $stmt->close();
+        $this->conn->close();
+        return $result;
     }
 
-    public function update()
+    public function update($data)
     {
         
     }

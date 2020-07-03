@@ -15,7 +15,10 @@ class Items implements Controller {
 
   public function create() 
   {
-
+    $data = file_get_contents('php://input');
+    $data = json_decode($data, true);
+// die(json_encode($data));
+    return $this->itemModel->create($data);
   }
 
   public function update() {

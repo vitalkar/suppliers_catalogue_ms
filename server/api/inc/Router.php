@@ -26,8 +26,9 @@ class Router
                     $this->currMethod = $url[1];
                     unset($url[1]);
                 }
-                $this->params = $url ? array_values($url) : array();
-                $result = call_user_func_array([$this->currController, $this->currMethod], $this->params);
+                // $this->params = $url ? array_values($url) : array();
+                // $result = call_user_func_array([$this->currController, $this->currMethod], $this->params);
+                $result = call_user_func([$this->currController, $this->currMethod], null);
                 die(json_encode($result));
             }
         }

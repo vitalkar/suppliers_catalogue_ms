@@ -2,7 +2,7 @@
 
 interface Model 
 {
-    public function create();
     public function readAll();
-    public function update();
+    public function create($data);
+    public function update($data);
 }
