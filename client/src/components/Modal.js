@@ -1,8 +1,9 @@
 import React, { useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { AppContext } from '../contexts/app.context';
-import { TOGGLE_MODAL, GET_CURR_LIST, SET_CURR_LIST } from '../constants/constants';
+import { TOGGLE_MODAL, GET_CURR_LIST } from '../constants/constants';
 import { fetchCurrList } from '../shared/service';
+import { useInputChange } from '../shared/hooks'; 
 
 const Container = styled.div`
   height: 100%;
@@ -61,6 +62,30 @@ const Input = styled.input`
 
 `;
 
+const Select = styled.select`
+  height: 3rem;
+  width: 80%;
+  border-radius: 5px;
+  border: none;
+  margin-bottom: 1rem; 
+  outline-color: #C68513;
+  font-size: 1.2rem;
+  letter-spacing: 0.1rem;
+  background-color: #B7C8E4;
+  color: #fff;
+`;
+
+const Option = styled.option`
+  height: 100;
+  width: 100%;
+  padding-left: 0.5rem;
+  border: none;
+  outline-color: #C68513;
+  font-size: 1.2rem;
+  letter-spacing: 0.1rem;
+  cursor: pointer;
+`;
+
 const SubmitButton = styled.button`
   height: 3rem;
   width: 80%;
@@ -84,44 +109,32 @@ export default function Modal() {
     
     let formContent;
 
-    const [name, setName] = useState('');
-    const [price, setPrice] = useState(0);
-    const [clientType, setClientType] = useState('');
+
+    const [input, handleInputChange] = useInputChange({});
 
     const handleClose = () => {
         dispatch({type: TOGGLE_MODAL, payload: !state.showModal})
     }
 
+    const handleFormClear = ({elements}) => {
+        for (const name in input) {
+            console.log();
+            elements[name].value = '';
+        }   
+    }
+
     const handleSubmit = async (e) => {        
         e.preventDefault();
         
-        let data; 
-
-        switch (state.currList) {
-            case 'items':
-                data = {
-                    name: name,
-                    price: price,
-                    has_var: ''
-                };
-                break;
-            case 'clients':
-                data = {};
-                break;
-            case 'diversities':
-                data = {};
-                break;
-            default:
-                data = {};
-                break;
-        }
-
+        console.log(e.target);
+        handleFormClear(e.target);
+    
         const options = {
             method: 'POST',
             headers: {
                 // 'Content-Type': 'application/json;charset=utf-8'
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(input)
         };
 
         const response = await fetch(`http://localhost:80/dev/suppliers_catalogue_ms/server/api/${state.currList}/create`, options)
@@ -142,8 +155,8 @@ export default function Modal() {
         case 'items':
             formContent = (
                 <>
-                    <Input type="text"  placeholder="name" value={name} onChange={(e) => setName(e.target.value)} />
-                    <Input type="number" placeholder="price" value={price} onChange={(e) => setPrice(e.target.value)} />
+                    <Input type="text" placeholder="name" name="name" value={input.name || ''} onChange={handleInputChange} />
+                    <Input type="number" placeholder="price" name="price" value={input.price || ''} onChange={handleInputChange} />
                     <Input type="text" placeholder="has vat" value={''} readOnly />
                 </>
             );
@@ -151,14 +164,19 @@ export default function Modal() {
         case 'clients':
             formContent = (
                 <>
-                    <Input type="text" placeholder="name" value={name} onChange={(e) => setName(e.target.value)} />
+                    <Input type="text" placeholder="name" name="name" value={input.name || ''} onChange={handleInputChange} />
+                    <Select name="type">
+                        <Option value="resturant" defaultValue>Resturant</Option>
+                        <Option value="coffee_house">Coffee House</Option>
+                        <Option value="bar">Bar</Option>
+                    </Select>
                 </>
             );
             break;
         case 'diversities':
             formContent = (
                 <>
-                    <Input type="text" placeholder="name" value={name} onChange={(e) => setName(e.target.value)} />
+                    <Input type="text" placeholder="name" name="name" value={input.name || ''} onChange={handleInputChange} />
                 </>
             );
             break;

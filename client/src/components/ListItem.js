@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { AppContext } from '../contexts/app.context';
-
+import { DELETE_PROMPT } from '../constants/constants';
 
 const Container = styled.li`
   height: 3rem;
@@ -58,10 +58,19 @@ const ActionsButton = styled.div`
 
 export default function ListItem({data}) {
     const { state, dispatch } = useContext(AppContext);    
-    let content;
+    let content, id;
 
     const handleDelete = async (e) => {
-        const response = await fetch(`http://localhost:80/dev/suppliers_catalogue_ms/server/api/${state.currList}/readAll`);
+        let { id } = e.target;
+        id = id.substring(7);
+        
+        dispatch({ type: DELETE_PROMPT, payload: { show: true, msg: `delete ${id} from ${state.currList}?` }});
+        
+        const options = {
+            method: 'DELETE',
+            body: JSON.stringify({id: id})
+        }
+        const response = await fetch(`http://localhost:80/dev/suppliers_catalogue_ms/server/api/${state.currList}/delete`, options);
     }
 
     const handleUpdate = async (e) => {
@@ -70,50 +79,48 @@ export default function ListItem({data}) {
 
     switch (state.currList) {
         case 'items':
+            id = data.c_number;
             content = (
-                <Content>
-                    <ContentItem>
-                        <EnableCheck type="checkbox" checked readOnly />
-                    </ContentItem>
+                <>
                     <ContentItem>{data.name}</ContentItem>
                     <ContentItem>{data.c_number}</ContentItem>
                     <ContentItem>{data.price}</ContentItem>
                     <ContentItem>{data.has_vat}</ContentItem>
-                </Content>
+                </>
             );
             break;
         case 'clients':
+            id = data.name;
             content = (
-                <Content>
-                    <ContentItem>
-                        <EnableCheck type="checkbox" checked readOnly />
-                    </ContentItem>
-                    <ContentItem>{data.name}</ContentItem>
-                    <ContentItem>{data.type}</ContentItem>
-                </Content>
+                    <>
+                        <ContentItem>{data.name}</ContentItem>
+                        <ContentItem>{data.type}</ContentItem>
+                    </>
             );
             break;
         case 'diversities':
+            id = data.name;
             content = (
-                <Content>
-                    <ContentItem>
-                        <EnableCheck type="checkbox" checked readOnly />
-                    </ContentItem>
                     <ContentItem>{data.name}</ContentItem>
-                </Content>
             );
             break;
         default:
             content = null;
+            id = null
             break;
     }
 
     return (
         <Container>
-            {content}
+            <Content>
+                <ContentItem>
+                    <EnableCheck type="checkbox" checked readOnly />
+                </ContentItem>
+                {content}
+            </Content>
             <ActionsContainer>
-                <ActionsButton id="" name="edit" onClick={handleUpdate} />
-                <ActionsButton id="" name="delete" onClick={handleDelete} />
+                <ActionsButton data={data.name} name="edit" onClick={handleUpdate} />
+                <ActionsButton id={`delete_${id}`} data={data.name} name="delete" onClick={handleDelete} />
             </ActionsContainer>
         </Container>
         );

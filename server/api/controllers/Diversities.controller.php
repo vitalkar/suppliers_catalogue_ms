@@ -16,11 +16,18 @@ class Diversities implements Controller
 
     public function create()
     {
-
+        $data = file_get_contents('php://input');
+        $data = json_decode($data, true);
+        $this->clientModel->create($data);
     }
 
     public function update()
     {
 
+    }
+
+    public function delete()
+    {
+        
     }
 }

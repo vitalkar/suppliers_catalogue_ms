@@ -1,5 +1,12 @@
-import { GET_CURR_LIST, SET_CURR_LIST, TOGGLE_MODAL, MODAL_ADD, MODAL_EDIT } from '../constants/constants';
-
+import { 
+    GET_CURR_LIST, 
+    SET_CURR_LIST, 
+    TOGGLE_MODAL, 
+    DELETE_PROMPT, 
+    MODAL_ADD, 
+    MODAL_EDIT 
+} from '../constants/constants';
+    
 export default function reducer(state, action) {
     switch (action.type) {
         case GET_CURR_LIST: 
@@ -18,6 +25,9 @@ export default function reducer(state, action) {
 
         case TOGGLE_MODAL:
             return { ...state, showModal: action.payload};
+        case DELETE_PROMPT:
+            const { show, msg } = action.payload;
+            return { ...state, showPrompt: show, msgPrompt: msg };
         default:
             return state;
     }

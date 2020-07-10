@@ -22,6 +22,7 @@ class Diversity implements Model
 
     public function create($data)
     {
+        
     }
 
     public function update($data)

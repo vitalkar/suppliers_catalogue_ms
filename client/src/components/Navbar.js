@@ -1,10 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import styled from 'styled-components';
-import { BrowserRouter, Route, Link } from "react-router-dom";
 import { AppContext } from '../contexts/app.context';
 import { SET_CURR_LIST, TOGGLE_MODAL } from '../constants/constants';
-// import List from './List';
-
 
 const Container = styled.div`
   height: 15%;
@@ -64,7 +61,6 @@ const Logo = styled.div`
   align-items: center;
   justify-content: center;
 `;
-
 
 export default function Navbar() {
 

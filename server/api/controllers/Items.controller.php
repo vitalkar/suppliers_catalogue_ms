@@ -17,11 +17,18 @@ class Items implements Controller {
   {
     $data = file_get_contents('php://input');
     $data = json_decode($data, true);
-// die(json_encode($data));
     return $this->itemModel->create($data);
   }
 
   public function update() {
 
+  }
+
+  public function delete()
+  {
+    $data = file_get_contents('php://input');
+    $data = json_decode($data, true);
+    die(json_encode($data));
+    return $this->itemModel->delete($data);
   }
 }

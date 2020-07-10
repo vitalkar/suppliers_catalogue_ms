@@ -34,4 +34,9 @@ class Item implements Model
     {
         
     }
+
+    public function delete($data)
+    {
+        
+    }
 }

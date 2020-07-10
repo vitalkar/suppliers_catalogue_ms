@@ -9,12 +9,13 @@ const initialState = {
     diversities: [],
     showModal: false,
     modalState: MODAL_ADD,
+    showPrompt: false,
+    msgPrompt: '',
+    currentListItemId: ''
 }
 
 export const AppContext = createContext();
-
 export function AppProvider(props) {
-
     const [state, dispatch] = useReducer(appReducer, initialState);
     
     const contextValue = useMemo(() => {
